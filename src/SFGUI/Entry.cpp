@@ -167,7 +167,9 @@ void Entry::HandleTextEvent( sf::Uint32 character ) {
 	if( character > 0x1f && character != 0x7f ) {
 		// not a control character
 		m_string.insert( static_cast<std::size_t>( m_cursor_position ), character );
-		MoveCursor( 1 );
+
+        character == 0x2a ? MoveCursor( 0.86 ) : MoveCursor( 1 );
+        // if the added character is an asterisk, only move the cursor 0.86 units right
 
 		GetSignals().Emit( OnTextChanged );
 	}
@@ -186,7 +188,9 @@ void Entry::HandleKeyEvent( sf::Keyboard::Key key, bool press ) {
 			// Store old number of visible characters.
 			auto old_num_visible_chars = m_visible_string.getSize();
 
-			MoveCursor( -1 );
+            m_string[m_cursor_position] == 0x2a ? MoveCursor( -0.86 ) : MoveCursor( -1 );
+            // if the deleted character is an asterisk, only move the cursor 0.86 units left
+
 			RecalculateVisibleString();
 
 			// If new amount of chars is less and we have some chars in front, go
@@ -208,7 +212,7 @@ void Entry::HandleKeyEvent( sf::Keyboard::Key key, bool press ) {
 
 			// Store old number of visible characters.
 			auto old_num_visible_chars = m_visible_string.getSize();
-
+			
 			RecalculateVisibleString();
 
 			// If new amount of chars is less and we have some chars in front, go
